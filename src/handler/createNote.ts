@@ -2,7 +2,7 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb'
 import { APIGatewayEvent, Context, APIGatewayProxyCallback } from 'aws-lambda'
-import { Item } from '../types'
+import { DynamoDBRecord } from '../types'
 
 const client = new DynamoDBClient({})
 const ddbDocClient = DynamoDBDocumentClient.from(client)
@@ -19,7 +19,7 @@ export const createNoteHandler = async (
   context: Context,
   cb: APIGatewayProxyCallback
 ) => {
-  let data: Item = JSON.parse(event.body!)
+  let data: DynamoDBRecord = JSON.parse(event.body!)
   try {
     const params = {
       TableName: NOTES_TABLE_NAME,

@@ -1,5 +1,5 @@
-export type Item = {
-  notesID: string
-  title: string
-  body: string
+export type DynamoDBRecord = {
+  notesID: string | undefined
+  title: string | undefined
+  body: string | undefined
 }

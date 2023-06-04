@@ -2,7 +2,7 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { DynamoDBDocumentClient, UpdateCommand } from '@aws-sdk/lib-dynamodb'
 import { APIGatewayEvent, Context, APIGatewayProxyCallback } from 'aws-lambda'
-import { Item } from '../types'
+import { DynamoDBRecord } from '../types'
 
 const client = new DynamoDBClient({})
 const ddbDocClient = DynamoDBDocumentClient.from(client)
@@ -21,7 +21,7 @@ export const updateNoteHandler = async (
   cb: APIGatewayProxyCallback
 ) => {
   const notesID = event.pathParameters!.id
-  const data: Item = JSON.parse(event.body!)
+  const data: DynamoDBRecord = JSON.parse(event.body!)
 
   try {
     const params = {
