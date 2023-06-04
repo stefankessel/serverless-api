@@ -105,7 +105,20 @@ functions:
       - http:
           method: delete
           path: notes/{id}
-
+  getNotes:
+    handler: src/handler/getNotes.getNotesHandler
+    environment:
+      NOTES_TABLE_NAME: !Ref notesTable
+    iamRoleStatementsName: myGetAllLambdaToDynamoDBRole
+    iamRoleStatements:
+      - Effect: 'Allow'
+        Action:
+          - dynamodb:Scan
+        Resource: !GetAtt notesTable.Arn
+    events:
+      - http:
+          method: get
+          path: notes
 plugins:
   - serverless-plugin-typescript
   - serverless-iam-roles-per-function

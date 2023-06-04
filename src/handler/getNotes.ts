@@ -1,5 +1,9 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
-import { DynamoDBDocumentClient, DeleteCommand } from '@aws-sdk/lib-dynamodb'
+import {
+  DynamoDBDocumentClient,
+  ScanCommand,
+  ScanCommandInput,
+} from '@aws-sdk/lib-dynamodb'
 import { APIGatewayEvent, Context, APIGatewayProxyCallback } from 'aws-lambda'
 
 const client = new DynamoDBClient({})
@@ -13,22 +17,18 @@ const send = (statusCode, data) => {
   }
 }
 
-export const deleteNoteHandler = async (
+export const getNotesHandler = async (
   event: APIGatewayEvent,
   context: Context,
   cb: APIGatewayProxyCallback
 ) => {
   try {
-    const notesID = event.pathParameters!.id
-    const params = {
+    const params: ScanCommandInput = {
       TableName: NOTES_TABLE_NAME,
-      Key: { notesID },
-      ConditionExpression: 'attribute_exists(notesID)',
     }
 
-    const res = await ddbDocClient.send(new DeleteCommand(params))
-
-    return cb(null, send(500, res))
+    const res = await ddbDocClient.send(new ScanCommand(params))
+    return cb(null, send(200, res))
   } catch (err) {
     return cb(null, send(500, err.message))
   }
